@@ -1,0 +1,19 @@
+# Ignore virtual environment directory
+venv/
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
+# Ignore VSCode settings
+.vscode/
+
+# Ignore database files
+*.db
+
+# Ignore instance directory
+instance/
+
+# Ignore other unnecessary files
+.DS_Store
+.env

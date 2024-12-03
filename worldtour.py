@@ -42,6 +42,9 @@ def main_page():
         .stMarkdown { margin: 0 !important; }
         .stButton { margin: 0 !important; }
         .st-expander-content { margin: 0 !important; padding: 0 !important; }
+        .divider { width: 100%; height: 1px; background-color: grey; margin: 10px 0; }
+        .map-container { margin-top: -10px; margin-bottom: 0; }
+        iframe { margin-top: -10px; margin-bottom: 0; }
         </style>
         """,
         unsafe_allow_html=True
@@ -61,6 +64,8 @@ def main_page():
 
     search_query = show_header()
 
+    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+
     js_code = """
     <script>
     document.addEventListener('DOMContentLoaded', (event) => {
@@ -72,11 +77,7 @@ def main_page():
     """
     components.html(js_code, height=0, width=0)
 
-    # Define maximum zoom level to see all continents
-    max_zoom_level = 1  # Adjust this value as needed
-
-    # Initialize the map with the defined maximum zoom level
-    map_object = folium.Map(location=[20.5937, 30.9629], zoom_start=max_zoom_level)
+    map_object = folium.Map(location=[20.5937, 30.9629], zoom_start=5, max_zoom=10, min_zoom=5)
 
     if search_query:
         response = requests.get(f'http://127.0.0.1:5000/locations')
@@ -92,7 +93,6 @@ def main_page():
         else:
             st.error("Error fetching locations")
 
-    # 1stWcity: Best cities with red icons
     top_places_1stWcity = [
         {"name": "Bangkok", "lat": 13.7563, "lon": 100.5018, "images": ["https://bigtourkrabi.com/include_designs/photoalbum/bangkok/muang_boran/bt_mb_001-6.jpg", "https://th.bing.com/th/id/OIP.80T5hZ5hh_Plgx9wbOa51AHaEK?rs=1&pid=ImgDetMain", "https://cdn.thecrazytourist.com/wp-content/uploads/2018/07/ccimage-shutterstock_193572950.jpg"]}
     ]
@@ -110,7 +110,6 @@ def main_page():
             icon=folium.Icon(icon='info-sign', color='red')
         ).add_to(map_object)
 
-    # 2ndWcity: Additional cities with blue icons
     top_places_2ndWcity = [
         {"name": "Berlin", "lat": 52.5200, "lon": 13.4050},
         {"name": "Madrid", "lat": 40.4168, "lon": -3.7038},
@@ -128,10 +127,10 @@ def main_page():
         folium.Marker(
             [place['lat'], place['lon']],
             popup=place['name'],
-            icon=folium.Icon(icon='info-sign', color='blue', icon_size=(20, 33))  # Smaller size for blue icons
+            icon=folium.Icon(icon='info-sign', color='blue', icon_size=(20, 33))
         ).add_to(map_object)
 
-    st_folium(map_object, width=1500, height=1000)
+    st_folium(map_object, width=1500, height=700)
 
 if __name__ == "__main__":
     main_page()
